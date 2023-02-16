@@ -9,6 +9,7 @@ include(CMakeParseArguments)
 #
 #  add_buddy_model_benchmark(name
 #    [OpenCV, PNGImage]
+#    TOOL    tool to use
 #    MLIR    mlir file
 #    BITCODE object file
 #    LIBRARY library name
@@ -20,14 +21,14 @@ function(add_buddy_model_benchmark name)
   # Parse arguments
   cmake_parse_arguments(ARGS
     "OpenCV;PNGImage"
-    "MLIR;BITCODE;LIBRARY"
+    "TOOL;TOOLDIR;MLIR;BITCODE;LIBRARY"
     "OPTIONS;SOURCE"
     ${ARGN}
   )
 
   # Compile MLIR file to LLVM bitcode
   add_custom_command(OUTPUT ${ARGS_BITCODE}
-    COMMAND ${LLVM_MLIR_BINARY_DIR}/mlir-opt ${CMAKE_CURRENT_SOURCE_DIR}/${ARGS_MLIR} 
+    COMMAND ${ARGS_TOOLDIR}/${ARGS_TOOL} ${CMAKE_CURRENT_SOURCE_DIR}/${ARGS_MLIR} 
       ${ARGS_OPTIONS} | ${LLVM_MLIR_BINARY_DIR}/mlir-translate --mlir-to-llvmir |
       ${LLVM_MLIR_BINARY_DIR}/llc -mtriple=${BUDDY_OPT_TRIPLE} -mattr=${BUDDY_OPT_ATTR} 
         --filetype=obj -o ${CMAKE_CURRENT_BINARY_DIR}/${ARGS_BITCODE}
