@@ -25,7 +25,6 @@ function(add_buddy_model_benchmark name)
     ${ARGN}
   )
 
-  message(STATUS "adding new benchmarl")
   # Compile MLIR file to LLVM bitcode
   add_custom_command(OUTPUT ${ARGS_BITCODE}
     COMMAND ${LLVM_MLIR_BINARY_DIR}/mlir-opt ${CMAKE_CURRENT_SOURCE_DIR}/${ARGS_MLIR} 
