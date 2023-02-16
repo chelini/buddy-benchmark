@@ -21,7 +21,7 @@ set(CMAKE_C_FLAGS "-no-pie")
 # BUDDY configuration
 #-------------------------------------------------------------------------------
 set(BuddyMLIR_DIR ${BUDDY_MLIR_BUILD_DIR}/cmake)
-find_package(BuddyMLIR REQUIRED CONFIG)
+#find_package(BuddyMLIR REQUIRED CONFIG)
 
 # BUDDY project.
 set(BUDDY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -35,12 +35,14 @@ message(STATUS "Configuring Target Triple: ${BUDDY_OPT_TRIPLE}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUDDY_BINARY_DIR})
 
 # Add BUDDY files to the include path
-include_directories(${BUDDY_MAIN_INCLUDE_DIR})
-include_directories(${BUDDY_MLIR_INTERFACE_DIR})
+#include_directories(${BUDDY_MAIN_INCLUDE_DIR})
+#include_directories(${BUDDY_MLIR_INTERFACE_DIR})
 
 # MLIR binary directory.
-set(LLVM_MLIR_BINARY_DIR ${BUDDY_MLIR_BUILD_DIR}/../llvm/build/bin)
-set(LLVM_MLIR_LIBRARY_DIR ${BUDDY_MLIR_BUILD_DIR}/../llvm/build/lib)
+#set(LLVM_MLIR_BINARY_DIR ${BUDDY_MLIR_BUILD_DIR}/../llvm/build/bin)
+#set(LLVM_MLIR_LIBRARY_DIR ${BUDDY_MLIR_BUILD_DIR}/../llvm/build/lib)
+set(LLVM_MLIR_BINARY_DIR "/home/lorenzo/llvm-project/build/bin")
+set(LLVM_MLIR_LIBRARY_DIR "/home/lorenzo/llvm-project/build/lib")
 
 # Helper functions.
 include(${BUDDY_SOURCE_DIR}/cmake/buddy-benchmark.cmake)

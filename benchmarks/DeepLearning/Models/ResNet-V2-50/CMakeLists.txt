@@ -4,21 +4,19 @@ add_buddy_model_benchmark(resnet_v2_50-benchmark
   BITCODE resnet-default.o
   LIBRARY ResNetDefault
   OPTIONS
-    --test-linalg-transform-patterns="test-generalize-pad-tensor"
-    --linalg-bufferize 
+    --empty-tensor-to-alloc-tensor 
+    --one-shot-bufferize="\"bufferize-function-boundaries allow-return-allocs function-boundary-type-conversion=identity-layout-map\""
+    --canonicalize
+    --drop-equivalent-buffer-results --finalizing-bufferize
     --convert-linalg-to-loops 
-    --func-bufferize 
-    --arith-bufferize 
-    --tensor-bufferize 
-    --finalizing-bufferize 
+    --canonicalize 
     --convert-vector-to-scf 
     --convert-scf-to-cf 
-    --expand-strided-metadata
-    --lower-affine 
+    --expand-strided-metadata 
+    --lower-affine -convert-arith-to-llvm 
     --convert-vector-to-llvm 
-    -memref-expand -arith-expand 
-    --convert-arith-to-llvm
-    --convert-memref-to-llvm 
+    --finalize-memref-to-llvm 
+    --arith-expand 
     --convert-math-to-llvm
     --llvm-request-c-wrappers
     --convert-func-to-llvm
