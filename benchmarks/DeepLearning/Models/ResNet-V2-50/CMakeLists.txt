@@ -1,6 +1,6 @@
 add_buddy_model_benchmark(resnet_v2_50-benchmark
   OpenCV
-  TOOLDIR /home/lorenzo/llvm-project/build/bin
+  TOOLDIR ${LLVM_MLIR_BINARY_DIR}
   TOOL mlir-opt
   MLIR ResNet-V2-50.mlir
   BITCODE resnet-default.o
@@ -28,7 +28,7 @@ add_buddy_model_benchmark(resnet_v2_50-benchmark
 
 add_buddy_model_benchmark(resnet_v2_50-benchmark-tpp
   OpenCV
-  TOOLDIR /home/lorenzo/tpp-sandbox/build/bin
+  TOOLDIR ${TPP_MLIR_BINARY_DIR}
   TOOL tpp-opt
   MLIR ResNet-V2-50.mlir
   BITCODE resnet-tpp.o
