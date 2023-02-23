@@ -1,64 +1,39 @@
-add_buddy_model_benchmark(resnet_v2_50-benchmark
-  OpenCV
-  TOOLDIR ${LLVM_MLIR_BINARY_DIR}
-  TOOL mlir-opt
-  MLIR ResNet-V2-50.mlir
-  BITCODE resnet-default.o
-  LIBRARY ResNetDefault
-  OPTIONS
-    --empty-tensor-to-alloc-tensor 
-    --one-shot-bufferize="\"bufferize-function-boundaries allow-return-allocs function-boundary-type-conversion=identity-layout-map\""
-    --canonicalize
-    --drop-equivalent-buffer-results --finalizing-bufferize
-    --convert-linalg-to-loops 
-    --canonicalize 
-    --convert-vector-to-scf 
-    --convert-scf-to-cf 
-    --expand-strided-metadata 
-    --lower-affine -convert-arith-to-llvm 
-    --convert-vector-to-llvm 
-    --finalize-memref-to-llvm 
-    --arith-expand 
-    --convert-math-to-llvm
-    --llvm-request-c-wrappers
-    --convert-func-to-llvm
-    --reconcile-unrealized-casts
-  SOURCE Main.cpp ResNetBenchmark.cpp
-)
-
-add_buddy_model_benchmark(resnet_v2_50-benchmark-tpp
+add_buddy_model_benchmark(resnet_v2_50-benchmark-xsmm
   OpenCV
   TOOLDIR ${TPP_MLIR_BINARY_DIR}
   TOOL tpp-opt
   MLIR ResNet-V2-50.mlir
-  BITCODE resnet-tpp.o
-  LIBRARY ResNetDefaultTpp
+  BITCODE resnet-xsmm.o
+  LIBRARY ResNetDefaultXsmm
   OPTIONS
-    --pack-conv2DNhwcHwcf="block-factors=32,32"
-    --canonicalize --propagate-pack-and-unpack 
+    --pack-conv2DNhwcHwcf="\"block-factors=32,32\""
+    --propagate-pack-and-unpack 
     --canonicalize 
     --constant-fold-pack 
-    --interchange-conv-to-expose-matmul 
     --element-wise-fusion 
     --tile-consumer-and-fuse-producers="\"tile-sizes=1,1,1\"" 
     --cse --canonicalize 
-    --rewrite-to-brgemm --generalize-tensor-pack-unpack
+    --interchange-conv-to-expose-matmul
+    --rewrite-conv-to-matmul-or-brgemm 
+    --generalize-tensor-pack-unpack
     --empty-tensor-to-alloc-tensor 
-    --one-shot-bufferize="\"bufferize-function-boundaries allow-return-allocs function-boundary-type-conversion=identity-layout-map\""
-    --canonicalize
-    --drop-equivalent-buffer-results --finalizing-bufferize
-    --convert-linalg-to-loops 
-    --canonicalize 
+    --bufferize
+    --convert-linalg-to-tpp="\"use-parallel-loops=false\""
+    -convert-linalg-to-loops --canonicalize 
+    --convert-tpp-to-xsmm 
+    --loop-invariant-code-motion 
+    --convert-xsmm-to-func 
     --convert-vector-to-scf 
     --convert-scf-to-cf 
     --expand-strided-metadata 
-    --lower-affine -convert-arith-to-llvm 
+    --lower-affine 
+    --convert-arith-to-llvm 
     --convert-vector-to-llvm 
     --finalize-memref-to-llvm 
     --arith-expand 
-    --convert-math-to-llvm
-    --llvm-request-c-wrappers
-    --convert-func-to-llvm
-    --reconcile-unrealized-casts
+    --convert-math-to-llvm 
+    --llvm-request-c-wrappers 
+    --convert-func-to-llvm --canonicalize 
+    --reconcile-unrealized-casts 
   SOURCE Main.cpp ResNetBenchmark.cpp
 )

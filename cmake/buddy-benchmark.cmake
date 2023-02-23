@@ -29,9 +29,12 @@ function(add_buddy_model_benchmark name)
   # Compile MLIR file to LLVM bitcode
   add_custom_command(OUTPUT ${ARGS_BITCODE}
     COMMAND ${ARGS_TOOLDIR}/${ARGS_TOOL} ${CMAKE_CURRENT_SOURCE_DIR}/${ARGS_MLIR} 
-      ${ARGS_OPTIONS} | ${LLVM_MLIR_BINARY_DIR}/mlir-translate --mlir-to-llvmir |
-      ${LLVM_MLIR_BINARY_DIR}/llc -mtriple=${BUDDY_OPT_TRIPLE} -mattr=${BUDDY_OPT_ATTR} 
+      ${ARGS_OPTIONS} | ${LLVM_MLIR_BINARY_DIR}/mlir-translate --mlir-to-llvmir > /tmp/tmp.bc 
+    COMMAND
+      ${LLVM_MLIR_BINARY_DIR}/llc /tmp/tmp.bc -mtriple=${BUDDY_OPT_TRIPLE} -mattr=${BUDDY_OPT_ATTR}  
         --filetype=obj -o ${CMAKE_CURRENT_BINARY_DIR}/${ARGS_BITCODE}
+    COMMAND
+      rm -f /tmp/tmp.bc
   )
 
   add_library(${ARGS_LIBRARY} ${ARGS_BITCODE})
@@ -42,10 +45,12 @@ function(add_buddy_model_benchmark name)
 
   # Link libraries
   target_link_directories(${name} PRIVATE ${LLVM_MLIR_LIBRARY_DIR})
+  target_link_directories(${name} PRIVATE ${TPP_MLIR_LIBRARY_DIR})
   target_link_libraries(${name}
     ${ARGS_LIBRARY}
     GoogleBenchmark 
     mlir_c_runner_utils
+    tpp_c_runner_utils
   )
   if (${ARGS_OpenCV})
     target_link_libraries(${name} ${ARGS_LIBRARY} ${OpenCV_LIBS})

@@ -41,6 +41,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUDDY_BINARY_DIR})
 # MLIR binary directory.
 #set(LLVM_MLIR_BINARY_DIR ${BUDDY_MLIR_BUILD_DIR}/../llvm/build/bin)
 #set(LLVM_MLIR_LIBRARY_DIR ${BUDDY_MLIR_BUILD_DIR}/../llvm/build/lib)
+# TODO: find package for tpp.
 set(LLVM_MLIR_BINARY_DIR "/home/lorenzo/llvm-project/build/bin")
 set(LLVM_MLIR_LIBRARY_DIR "/home/lorenzo/llvm-project/build/lib")
 set(TPP_MLIR_BINARY_DIR "/home/lorenzo/tpp-sandbox/build/bin")
